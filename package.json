@@ -1,0 +1,34 @@
+{
+  "name": "noflo-knex",
+  "description": "Knex.js database query components for NoFlo",
+  "version": "0.1.0",
+  "author": {
+    "name": "Henri Bergius",
+    "email": "henri.bergius@iki.fi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/noflo/noflo-knex.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "undefined/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "noflo": "~0.4.0",
+    "knex": "~0.5.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.6.6",
+    "grunt-coffeelint": "~0.0.6",
+    "grunt-cafe-mocha": "~0.1.2",
+    "chai": "~1.5.0",
+    "mocha": "~1.9.0",
+    "grunt-contrib-watch": "~0.3.1",
+    "sqlite3": "~2.1.19"
+  },
+  "keywords": []
+}
