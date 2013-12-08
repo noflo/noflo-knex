@@ -32,5 +32,13 @@
   "keywords": [],
   "scripts": {
     "test": "grunt test"
+  },
+  "noflo": {
+    "icon": "bitbucket",
+    "components": {
+      "BeginTransaction": "./components/BeginTransaction.coffee",
+      "Commit": "./components/Commit.coffee",
+      "Rollback": "./components/Rollback.coffee"
+    }
   }
 }
