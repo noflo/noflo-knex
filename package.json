@@ -36,6 +36,7 @@
   "noflo": {
     "icon": "bitbucket",
     "components": {
+      "Connect": "./components/Connect.coffee",
       "BeginTransaction": "./components/BeginTransaction.coffee",
       "Commit": "./components/Commit.coffee",
       "Rollback": "./components/Rollback.coffee"
