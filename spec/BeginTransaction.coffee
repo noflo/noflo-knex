@@ -96,4 +96,6 @@ describe 'BeginTransaction component', ->
         .then (begintransaction) ->
           chai.expect(begintransaction).to.be.an 'array'
           chai.expect(begintransaction.length).to.equal 1
+          chai.expect(begintransaction[0]).to.be.an 'object'
+          chai.expect(begintransaction[0].name).to.equal 'Foo Bar'
           done()
