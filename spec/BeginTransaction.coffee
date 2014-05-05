@@ -87,9 +87,10 @@ describe 'BeginTransaction component', ->
     describe 'on rollback', ->
       it 'should call error', (done) ->
         error.once 'data', (data) ->
-          chai.expect(data).to.equal 'We roll'
+          chai.expect(data).to.be.instanceof Error
+          chai.expect(data.message).to.equal 'We roll'
           done()
-        trans.rollback 'We roll'
+        trans.rollback new Error 'We roll'
       it 'the data should not be available for query', (done) ->
         conn('begintransaction')
         .select('name', 'id')

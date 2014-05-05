@@ -9,12 +9,15 @@ class Rollback extends noflo.Component
       message: new noflo.Port 'all'
 
     @inPorts.transaction.on 'data', (@transaction) =>
-      do @commit
+      do @rollback
     @inPorts.message.on 'data', (@message) =>
-      do @commit
+      do @rollback
 
-  commit: ->
+  rollback: ->
     return unless @transaction and @message
+    unless @message instanceof Error
+      @message = new Error @message
+
     @transaction.rollback @message
     @transaction = null
     @message = null
