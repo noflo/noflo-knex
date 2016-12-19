@@ -1,7 +1,7 @@
 {
   "name": "noflo-knex",
   "description": "Knex.js database query components for NoFlo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Henri Bergius",
     "email": "henri.bergius@iki.fi"
