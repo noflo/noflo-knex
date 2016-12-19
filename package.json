@@ -10,12 +10,7 @@
     "type": "git",
     "url": "git://github.com/noflo/noflo-knex.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "undefined/blob/master/LICENSE-MIT"
-    }
-  ],
+  "license": "MIT",
   "dependencies": {
     "noflo": "~0.5.0",
     "knex": "~0.6.0"
@@ -30,7 +25,7 @@
     "mocha": "~3.2.0",
     "sqlite3": "~3.0.0"
   },
-  "keywords": [],
+  "keywords": ["noflo"],
   "scripts": {
     "test": "grunt test"
   },
