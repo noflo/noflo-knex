@@ -4,6 +4,7 @@ BeginTransaction = require '../components/BeginTransaction.coffee'
 Knex = require 'knex'
 conn = new Knex
   client: 'sqlite3'
+  useNullAsDefault: true
   connection:
     filename: ':memory:'
 
@@ -39,7 +40,7 @@ describe 'BeginTransaction component', ->
   describe 'for correct transaction', ->
     it 'should be able to start a transaction', (done) ->
       transaction.once 'data', (t) ->
-        chai.expect(t).to.be.an 'object'
+        chai.expect(t).to.be.an 'function'
         trans = t
         done()
       connection.send conn
@@ -74,7 +75,7 @@ describe 'BeginTransaction component', ->
   describe 'for failing transaction', ->
     it 'should be able to start a transaction', (done) ->
       transaction.once 'data', (t) ->
-        chai.expect(t).to.be.an 'object'
+        chai.expect(t).to.be.a 'function'
         trans = t
         done()
       connection.send conn
@@ -95,6 +96,7 @@ describe 'BeginTransaction component', ->
           chai.expect(data.message).to.equal 'We roll'
           done()
         trans.rollback new Error 'We roll'
+        return
       it 'the data should not be available for query', (done) ->
         conn('begintransaction')
         .select('name', 'id')

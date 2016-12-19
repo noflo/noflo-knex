@@ -17,7 +17,7 @@ class BeginTransaction extends noflo.Component
         return unless @outPorts.success.isAttached()
         @outPorts.success.send commitMessage
         @outPorts.success.disconnect()
-      .otherwise (err) =>
+      .catch (err) =>
         return unless @outPorts.error.isAttached()
         @outPorts.error.send err
         @outPorts.error.disconnect()
