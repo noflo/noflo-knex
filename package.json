@@ -10,26 +10,22 @@
     "type": "git",
     "url": "git://github.com/noflo/noflo-knex.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "undefined/blob/master/LICENSE-MIT"
-    }
-  ],
+  "license": "MIT",
   "dependencies": {
-    "noflo": "~0.5.0",
-    "knex": "~0.6.0"
+    "noflo": "0.x >= 0.5",
+    "knex": "~0.12.6"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-coffeelint": "~0.0.6",
-    "grunt-cafe-mocha": "~0.1.2",
-    "chai": "~1.9.0",
-    "mocha": "~1.21.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "sqlite3": "~3.0.0"
+    "chai": "^3.5.0",
+    "coffee-script": "^1.12.2",
+    "grunt": "^1.0.1",
+    "grunt-coffeelint": "^0.0.16",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-test": "^0.13.2",
+    "mocha": "^3.2.0",
+    "sqlite3": "^3.1.8"
   },
-  "keywords": [],
+  "keywords": ["noflo"],
   "scripts": {
     "test": "grunt test"
   },

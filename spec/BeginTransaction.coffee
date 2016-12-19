@@ -2,8 +2,9 @@ noflo = require 'noflo'
 chai = require 'chai' unless chai
 BeginTransaction = require '../components/BeginTransaction.coffee'
 Knex = require 'knex'
-conn = Knex.initialize
+conn = new Knex
   client: 'sqlite3'
+  useNullAsDefault: true
   connection:
     filename: ':memory:'
 
@@ -34,11 +35,12 @@ describe 'BeginTransaction component', ->
         return
       .then ->
         prepareComponent done
+    return
 
   describe 'for correct transaction', ->
     it 'should be able to start a transaction', (done) ->
       transaction.once 'data', (t) ->
-        chai.expect(t).to.be.an 'object'
+        chai.expect(t).to.be.an 'function'
         trans = t
         done()
       connection.send conn
@@ -51,6 +53,7 @@ describe 'BeginTransaction component', ->
         chai.expect(rows).to.be.an 'array'
         chai.expect(rows[0]).to.equal 1
         done()
+      return
     describe 'on commit', ->
       it 'should call success', (done) ->
         success.once 'data', (data) ->
@@ -67,11 +70,12 @@ describe 'BeginTransaction component', ->
           chai.expect(begintransaction[0]).to.be.an 'object'
           chai.expect(begintransaction[0].name).to.equal 'Foo Bar'
           done()
+        return
 
   describe 'for failing transaction', ->
     it 'should be able to start a transaction', (done) ->
       transaction.once 'data', (t) ->
-        chai.expect(t).to.be.an 'object'
+        chai.expect(t).to.be.a 'function'
         trans = t
         done()
       connection.send conn
@@ -84,6 +88,7 @@ describe 'BeginTransaction component', ->
         chai.expect(rows).to.be.an 'array'
         chai.expect(rows[0]).to.equal 2
         done()
+      return
     describe 'on rollback', ->
       it 'should call error', (done) ->
         error.once 'data', (data) ->
@@ -91,6 +96,7 @@ describe 'BeginTransaction component', ->
           chai.expect(data.message).to.equal 'We roll'
           done()
         trans.rollback new Error 'We roll'
+        return
       it 'the data should not be available for query', (done) ->
         conn('begintransaction')
         .select('name', 'id')
@@ -100,3 +106,4 @@ describe 'BeginTransaction component', ->
           chai.expect(begintransaction[0]).to.be.an 'object'
           chai.expect(begintransaction[0].name).to.equal 'Foo Bar'
           done()
+        return

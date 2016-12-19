@@ -18,9 +18,10 @@ class Connect extends noflo.Component
 
   connectDb: ->
     return unless @provider and @configuration
-    connection = knex.initialize
+    connection = new knex
       client: @provider
       connection: @configuration
+      useNullAsDefault: true
     @outPorts.connection.send connection
     @outPorts.connection.disconnect()
     @provider = null
