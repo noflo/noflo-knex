@@ -1,30 +1,22 @@
 noflo = require 'noflo'
 knex = require 'knex'
 
-class Connect extends noflo.Component
-  constructor: ->
-    @provider = null
-    @configuration = null
-    @inPorts =
-      provider: new noflo.Port 'string'
-      configuration: new noflo.Port 'object'
-    @outPorts =
-      connection: new noflo.Port 'object'
-
-    @inPorts.provider.on 'data', (@provider) =>
-      do @connectDb
-    @inPorts.configuration.on 'data', (@configuration) =>
-      do @connectDb
-
-  connectDb: ->
-    return unless @provider and @configuration
+exports.getComponent = ->
+  c = new noflo.Component
+  c.inPorts.add 'provider',
+    datatype: 'string'
+  c.inPorts.add 'configuration',
+    datatype: 'object'
+  c.outPorts.add 'connection',
+    datatype: 'object'
+  c.outPorts.add 'error',
+    datatype: 'object'
+  c.process (input, output) ->
+    return unless input.hasData 'provider', 'configuration'
+    [provider, config] = input.getData 'provider', 'configuration'
     connection = new knex
-      client: @provider
-      connection: @configuration
+      client: provider
+      connection: config
       useNullAsDefault: true
-    @outPorts.connection.send connection
-    @outPorts.connection.disconnect()
-    @provider = null
-    @configuration = null
-
-exports.getComponent = -> new Connect
+    output.sendDone
+      connection: connection

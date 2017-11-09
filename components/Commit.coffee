@@ -1,22 +1,19 @@
 noflo = require 'noflo'
 
-class Commit extends noflo.Component
-  constructor: ->
-    @transaction = null
-    @message = null
-    @inPorts =
-      transaction: new noflo.Port 'object'
-      message: new noflo.Port 'string'
-
-    @inPorts.transaction.on 'data', (@transaction) =>
-      do @commit
-    @inPorts.message.on 'data', (@message) =>
-      do @commit
-
-  commit: ->
-    return unless @transaction and @message
-    @transaction.commit @message
-    @transaction = null
-    @message = null
-
-exports.getComponent = -> new Commit
+exports.getComponent = ->
+  c = new noflo.Component
+  c.inPorts.add 'transaction',
+    datatype: 'object'
+  c.inPorts.add 'message',
+    datatype: 'string'
+  c.outPorts.add 'out',
+    datatype: 'bang'
+  c.forwardBrackets =
+    transaction: ['out']
+  c.process (input, output) ->
+    return unless input.hasData 'transaction', 'message'
+    [transaction, message] = input.getData 'transaction', 'message'
+    transaction.commit message
+    output.sendDone
+      out: true
+    return

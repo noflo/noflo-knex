@@ -7,18 +7,22 @@ describe 'Connect component', ->
   provider = null
   configuration = null
   connection = null
+  error = null
   beforeEach (done) ->
     c = Connect.getComponent()
     provider = noflo.internalSocket.createSocket()
     configuration = noflo.internalSocket.createSocket()
     connection = noflo.internalSocket.createSocket()
+    error = noflo.internalSocket.createSocket()
     c.inPorts.provider.attach provider
     c.inPorts.configuration.attach configuration
     c.outPorts.connection.attach connection
+    c.outPorts.error.attach error
     done()
 
   describe 'opening a connection', ->
     it 'should make a connection we can create tables on', (done) ->
+      error.on 'data', done
       connection.on 'data', (data) ->
         chai.expect(data.schema).to.be.an 'object'
         data.schema.createTable 'connect', (t) ->
