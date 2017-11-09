@@ -1,25 +1,21 @@
 noflo = require 'noflo'
 
-class Rollback extends noflo.Component
-  constructor: ->
-    @transaction = null
-    @message = null
-    @inPorts =
-      transaction: new noflo.Port 'object'
-      message: new noflo.Port 'all'
-
-    @inPorts.transaction.on 'data', (@transaction) =>
-      do @rollback
-    @inPorts.message.on 'data', (@message) =>
-      do @rollback
-
-  rollback: ->
-    return unless @transaction and @message
-    unless @message instanceof Error
-      @message = new Error @message
-
-    @transaction.rollback @message
-    @transaction = null
-    @message = null
-
-exports.getComponent = -> new Rollback
+exports.getComponent = ->
+  c = new noflo.Component
+  c.inPorts.add 'transaction',
+    datatype: 'object'
+  c.inPorts.add 'message',
+    datatype: 'string'
+  c.outPorts.add 'out',
+    datatype: 'bang'
+  c.forwardBrackets =
+    transaction: ['out']
+  c.process (input, output) ->
+    return unless input.hasData 'transaction', 'message'
+    [transaction, message] = input.getData 'transaction', 'message'
+    unless Error.isError message
+      message = new Error message
+    transaction.rollback message
+    output.sendDone
+      out: true
+    return

@@ -1,25 +1,27 @@
 noflo = require 'noflo'
 
-class BeginTransaction extends noflo.Component
-  constructor: ->
-    @inPorts =
-      connection: new noflo.Port 'object'
-    @outPorts =
-      transaction: new noflo.Port 'object'
-      success: new noflo.Port 'string'
-      error: new noflo.Port 'object'
-
-    @inPorts.connection.on 'data', (db) =>
-      db.transaction (t) =>
-        @outPorts.transaction.send t
-        @outPorts.transaction.disconnect()
-      .then (commitMessage) =>
-        return unless @outPorts.success.isAttached()
-        @outPorts.success.send commitMessage
-        @outPorts.success.disconnect()
-      .catch (err) =>
-        return unless @outPorts.error.isAttached()
-        @outPorts.error.send err
-        @outPorts.error.disconnect()
-
-exports.getComponent = -> new BeginTransaction
+exports.getComponent = ->
+  c = new noflo.Component
+  c.inPorts.add 'connection',
+    datatype: 'object'
+  c.outPorts.add 'transaction',
+    datatype: 'object'
+  c.outPorts.add 'success',
+    datatype: 'string'
+  c.outPorts.add 'error',
+    datatype: 'object'
+  c.forwardBrackets =
+    connection: ['transaction', 'success', 'error']
+  c.process (input, output) ->
+    return unless input.hasData 'connection'
+    db = input.getData 'connection'
+    db.transaction (t) ->
+      output.send
+        transaction: t
+    .then (commitMessage) ->
+      output.send
+        success: commitMessage
+      output.done()
+    .catch (err) ->
+      output.done err
+    return
